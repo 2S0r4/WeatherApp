@@ -1,103 +1,190 @@
-import Image from "next/image";
+export default function Pages() {
+  const WForecast = [
+    {
+      day: "Tuesday",
+      weather: "Cloudy",
+      temperature: "26°",
+    },
+    {
+      day: "Wednesday",
+      weather: "Rainy",
+      temperature: "14°",
+    },
+    {
+      day: "Thursday",
+      weather: "Cloudy",
+      temperature: "25°",
+    },
+    {
+      day: "Friday",
+      weather: "Clear",
+      temperature: "32°",
+    },
+    {
+      day: "Saturday",
+      weather: "Cloudy",
+      temperature: "22°",
+    },
+  ];
 
-export default function Home() {
+  const todayForecast = {
+    day: "Monday",
+    date: "04 September",
+    location: "Tangerang",
+    temperature: "29°",
+    weather: "cloudy",
+    wind: "6.69 m/s",
+    humidity: "70%",
+    clouds: "40%",
+    realFeel: "23°",
+  };
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.js
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+    <main
+      className={`font-grotesk text-white h-screen w-screen flex items-center justify-center overflow-hidden ${
+        todayForecast.weather === "cloudy"
+          ? "cloudy"
+          : todayForecast.weather === "rainy"
+          ? "rainy"
+          : "clear"
+      }`}
+    >
+      <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined"
+        rel="stylesheet"
+      />
+      <div className="max-w-[600px] w-full h-screen flex flex-col justify-center">
+        <section className="w-full flex flex-col gap-3">
+          <div className="w-full flex gap-2">
+            <input
+              type="text"
+              placeholder="Insert your city name..."
+              className="w-full placeholder:italic focus:outline-none"
+            ></input>
+            <span class="material-symbols-outlined">search</span>
+          </div>
+          <div className="w-full h-[2px] bg-white"></div>
+        </section>
+        <section className="w-full flex flex-col">
+          <div className="flex gap-10 items-center py-[36px]">
+            <div>
+              <h2 className="font-bold">{`${todayForecast.day}`}</h2>
+              <h2>{`${todayForecast.date}`}</h2>
+            </div>
+            <h1 className="text-[50px] font-bold">{`${todayForecast.location}`}</h1>
+          </div>
+          <div className="w-full h-[2px] bg-white"></div>
+        </section>
+        {/* WEATHER */}
+        <section>
+          <div className="flex gap-4 py-[36px]">
+            <div>
+              <h1 className="font-azeret text-[93px]">{`${todayForecast.temperature}`}</h1>
+              <h2 className="text-[20px]">
+                {todayForecast.weather === "cloudy"
+                  ? "cloudy"
+                  : todayForecast.weather === "rainy"
+                  ? "rainy"
+                  : "clear"}
+              </h2>
+            </div>
+            <span
+              style={{ fontSize: "140px" }}
+              class="material-symbols-outlined"
+            >
+              {todayForecast.weather === "rainy"
+                ? "rainy"
+                : todayForecast.weather === "cloudy"
+                ? "filter_drama"
+                : "wb_sunny"}
+            </span>
+          </div>
+          <div className="w-full h-[2px] bg-white"></div>
+        </section>
+        <section className="flex flex-col justify-between gap-10 py-[36px]">
+          <ul className="flex w-full justify-between items-center">
+            {/* WIND */}
+            <li className="flex flex-col justify-center">
+              <div className="flex items-center gap-5">
+                <span
+                  style={{ fontSize: "40px" }}
+                  class="material-symbols-outlined"
+                >
+                  air
+                </span>
+                <h3 className="text-[ 0px] font-medium">{`${todayForecast.wind}`}</h3>
+              </div>
+              <h1 className="font-azeret text-[13px] opacity-75">Wind</h1>
+            </li>
+            {/* HUMIDITY */}
+            <li className="flex flex-col justify-center">
+              <div className="flex items-center gap-5">
+                <span
+                  style={{ fontSize: "40px" }}
+                  class="material-symbols-outlined"
+                >
+                  humidity_low
+                </span>
+                <h3 className="text-[ 0px] font-medium">{`${todayForecast.humidity}`}</h3>
+              </div>
+              <h1 className="font-azeret text-[13px] opacity-75">Humidity</h1>
+            </li>
+            {/* CLOUD */}
+            <li className="flex flex-col justify-center">
+              <div className="flex items-center gap-5">
+                <span
+                  style={{ fontSize: "40px" }}
+                  class="material-symbols-outlined"
+                >
+                  cloud
+                </span>
+                <h3 className="text-[ 0px] font-medium">{`${todayForecast.clouds}`}</h3>
+              </div>
+              <h1 className="font-azeret text-[13px] opacity-75">Clouds</h1>
+            </li>
+            {/* REAL FEEL */}
+            <li className="flex flex-col justify-center">
+              <div className="flex items-center gap-5">
+                <span
+                  style={{ fontSize: "40px" }}
+                  class="material-symbols-outlined"
+                >
+                  device_thermostat
+                </span>
+                <h3 className="text-[ 0px] font-medium">{`${todayForecast.realFeel}`}</h3>
+              </div>
+              <h1 className="font-azeret text-[13px] opacity-75">Real Feel</h1>
+            </li>
+          </ul>
+          <div className="flex flex-col gap-5">
+            <h1 className="font-azeret opacity-75">Weekly Forecast</h1>
+            <ul className="flex gap-5">
+              {WForecast.map((forecast, index) => (
+                <li
+                  key={index}
+                  className="bg-black/35 p-3 w-full flex flex-col gap-2"
+                >
+                  <h1>{forecast.day}</h1>
+                  <div className="flex items-center gap-1">
+                    <span
+                      style={{ fontSize: "28px" }}
+                      className="material-symbols-outlined"
+                    >
+                      {forecast.weather === "Rainy"
+                        ? "rainy"
+                        : forecast.weather === "Cloudy"
+                        ? "filter_drama"
+                        : "wb_sunny"}
+                    </span>
+                    <h3>{forecast.temperature}</h3>
+                  </div>
+                  <h2>{forecast.weather}</h2>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      </div>
+    </main>
   );
 }
