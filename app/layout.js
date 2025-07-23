@@ -27,7 +27,7 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`${grotesk.variable} ${Azeret.variable} antialiased h-screen w-screen`}
+        className={`${grotesk.variable} ${Azeret.variable} antialiased h-screen w-screen overflow-hidden`}
       >
         {children}
       </body>
