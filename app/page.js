@@ -1,36 +1,10 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 import { getWeather } from "./lib/APIcall";
+import { getLoc } from "./lib/geoDB";
+import { getDaily } from "./lib/dailyForecast";
 
 export default function Pages() {
-  const WForecast = [
-    {
-      day: "Tuesday",
-      weather: "Cloudy",
-      temperature: "26°",
-    },
-    {
-      day: "Wednesday",
-      weather: "Rainy",
-      temperature: "14°",
-    },
-    {
-      day: "Thursday",
-      weather: "Cloudy",
-      temperature: "25°",
-    },
-    {
-      day: "Friday",
-      weather: "Clear",
-      temperature: "32°",
-    },
-    {
-      day: "Saturday",
-      weather: "Cloudy",
-      temperature: "22°",
-    },
-  ];
-
   function getWeatherCategory(id) {
     if (id === 800) {
       return "clear";
@@ -67,12 +41,24 @@ export default function Pages() {
     realFeel: "--°",
   });
 
-  const [Temcity, setTemCity] = useState("Jakarta");
+  const [WForecast, setWForecast] = useState({
+    Tuesday: { weather: "Cloudy", temperature: "26°" },
+    Wednesday: { weather: "Rainy", temperature: "14°" },
+    Thursday: { weather: "Cloudy", temperature: "25°" },
+    Friday: { weather: "Clear", temperature: "32°" },
+    Saturday: { weather: "Cloudy", temperature: "22°" },
+  });
+
+  const DWForecast = WForecast;
+
+  const [location, setLocation] = useState(["-0.0214", "52.9746"]);
+  const [searchResults, setSearchResults] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     const fetchWeather = async () => {
-      const city = Temcity;
-      const data = await getWeather(city);
+      const data = await getWeather(location[0], location[1]);
       if (data) {
         setTodayForecast({
           location: data.name,
@@ -90,20 +76,40 @@ export default function Pages() {
           clouds: `${data.clouds.all}%`,
           realFeel: `${Math.round(data.main.feels_like)}°`,
         });
-        setWeather(todayForecast.weather);
       }
     };
-    fetchWeather();
-  }, [Temcity]);
 
-  function handleCityChange(event) {
-    console.log(Temcity);
-    setTemCity(event.target.value);
-  }
+    const fetchDailyForecast = async () => {
+      const data = await getDaily(location[0], location[1]);
+      setWForecast(data);
+    };
+    fetchWeather();
+    fetchDailyForecast();
+  }, [location]);
+
+  useEffect(() => {
+    const fetchLocation = async () => {
+      try {
+        const data = await getLoc(search);
+        const results = data.data.map((item) => ({
+          name: item.name,
+          countryCode: item.countryCode,
+          latitude: item.latitude,
+          longitude: item.longitude,
+        }));
+        setSearchResults(results);
+        console.log("Search Results:", results);
+      } catch (error) {
+        console.error("Error fetching location data:", error);
+      }
+    };
+
+    fetchLocation();
+  }, [search, showSearchResults == true]);
 
   return (
     <main
-      className={`font-grotesk text-white h-screen w-screen flex items-center justify-center overflow-hidden px-4 transition-colors ease-in-out duration-1000 ${
+      className={`font-grotesk text-white h-screen w-screen flex items-center justify-center overflow-hidden px-4 transition-colors ease-in-out duration-1000 transtition-weather ${
         todayForecast.weather === "cloudy"
           ? "cloudy"
           : todayForecast.weather === "rainy"
@@ -117,20 +123,42 @@ export default function Pages() {
       />
       <div className="max-w-[600px] w-full h-screen flex flex-col justify-center">
         <section className="w-full flex flex-col gap-3">
-          <div className="w-full flex gap-2">
+          <div className="w-full flex gap-2 relative">
             <input
               type="text"
               placeholder="Insert your city name..."
               className="w-full font-bold placeholder:italic placeholder:font-normal placeholder:font-azeret focus:outline-none"
-              onInput={handleCityChange}
               id="cityInput"
-            ></input>
-            <span
-              className="material-symbols-outlined cursor-pointer"
-              onClick={() =>
-                setCity(document.getElementById("cityInput").value)
+              onInput={(e) => setSearch(e.target.value.trim())}
+              onFocus={() => setShowSearchResults(true)}
+              onBlur={() =>
+                setTimeout(() => setShowSearchResults(!showSearchResults), 100)
               }
+            ></input>
+            <ul
+              className={`absolute top-12 bg-white text-black w-full ${
+                showSearchResults ? "block" : "hidden"
+              } max-h-[160px] overflow-y-scroll z-10`}
             >
+              {/* <li className="p-2 font-azeret cursor-pointer hover:bg-black hover:text-white">
+                Jakarta (ID)
+              </li> */}
+              {searchResults.map((result, index) => (
+                <li
+                  key={index}
+                  className="p-2 font-azeret cursor-pointer hover:bg-black hover:text-white"
+                  onClick={() => {
+                    setLocation([result.longitude, result.latitude]);
+                    setSearch("");
+                    setSearchResults([]);
+                    document.getElementById("cityInput").value = "";
+                  }}
+                >
+                  {result.name} ({result.countryCode})
+                </li>
+              ))}
+            </ul>
+            <span className="material-symbols-outlined cursor-pointer">
               search
             </span>
           </div>
@@ -224,15 +252,15 @@ export default function Pages() {
           <div className="flex flex-col gap-5">
             <h1 className="font-azeret opacity-75">Weekly Forecast</h1>
             <ul className="flex gap-5 overflow-x-scroll">
-              {WForecast.map((forecast, index) => (
+              {Object.entries(DWForecast).map(([day, forecast], index) => (
                 <li
-                  key={index}
+                  key={day}
                   className="bg-black/35 min-w-[116px] md:min-w-[180px] p-3 w-full flex flex-col gap-2"
                 >
-                  <h1>{forecast.day}</h1>
+                  <h1>{day}</h1>
                   <div className="flex items-center gap-1">
                     <span
-                      style={{ fontSize: "28px" }}
+                      style={{ fontSize: 28 }}
                       className="material-symbols-outlined"
                     >
                       {forecast.weather === "Rainy"
